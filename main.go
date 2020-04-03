@@ -113,12 +113,12 @@ func read(ws *websocket.Conn) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		publish('crawler-249816','bwin-events',msg[:n])
+		publish("crawler-249816","bwin-events",msg[:n])
 		fmt.Printf("<< %s\n", msg[:n])
 	}
 }
 
-func publish(projectID, topicID, msg []byte) error {
+func publish(projectID string, topicID string, msg []byte) error {
         // projectID := "my-project-id"
         // topicID := "my-topic"
         // msg := "Hello World"
