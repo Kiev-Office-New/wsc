@@ -10,7 +10,6 @@ import (
 	"os"
 	"os/signal"
 	"strings"
-	"io"
 	"context"
 	"golang.org/x/net/websocket"
 	"cloud.google.com/go/pubsub"
