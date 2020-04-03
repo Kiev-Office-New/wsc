@@ -111,9 +111,9 @@ func trapCtrlC(c *websocket.Conn) {
 }
 
 // Send STDIN lines to websocket server.
-func write(ws *websocket.Conn, command) {
-	ws.Write([]byte(command))
-	fmt.Printf(">> %s\n", command)
+func write(ws *websocket.Conn, cv string) {
+	ws.Write([]byte(cv))
+	fmt.Printf(">> %s\n", cv)
 }
 
 // Send STDIN lines to websocket server.
