@@ -16,6 +16,7 @@ import (
 )
 
 type headers []string
+type commands []string
 
 func (h *headers) String() string {
 	return strings.Join(*h, ", ")
@@ -26,15 +27,27 @@ func (h *headers) Set(value string) error {
 	return nil
 }
 
+func (c *commands) String() string {
+	return strings.Join(*c, ", ")
+}
+
+func (c *commands) Set(value string) error {
+	*c = append(*c, value)
+	return nil
+}
+
 func main() {
 	var (
 		target  = flag.String("u", "", "The URL to connect to")
 		origin  = flag.String("o", "", "The origin to use in the WS request")
 		h       headers
+		c 	commands
 		origURL *url.URL
 	)
 	flag.Var(&h, "H", `Headers to use in the WS request, can be used to multiple times to specify multiple headers.`+
 		` Example: -H "Sample-Header-1: foo" -H "Sample-Header-2: bar"`)
+	flag.Var(&c, "C", `Commands to send to the WS request, can be used to multiple times to specify multiple commands.`+
+		` Example: -C "hello" -C "world"`)
 	flag.Parse()
 
 	if *target == "" {
@@ -52,7 +65,10 @@ func main() {
 	}
 	ws := connect(*target, makeHeader(h), origURL)
 	trapCtrlC(ws)
-	go write(ws)
+	for _, cv := range c {
+		go write(ws, cv)
+	}
+	
 	read(ws)
 }
 
@@ -95,14 +111,20 @@ func trapCtrlC(c *websocket.Conn) {
 }
 
 // Send STDIN lines to websocket server.
-func write(ws *websocket.Conn) {
-	scanner := bufio.NewScanner(os.Stdin)
-	for scanner.Scan() {
-		t := scanner.Text()
-		ws.Write([]byte(t))
-		fmt.Printf(">> %s\n", t)
-	}
+func write(ws *websocket.Conn, command) {
+	ws.Write([]byte(command))
+	fmt.Printf(">> %s\n", command)
 }
+
+// Send STDIN lines to websocket server.
+// func write(ws *websocket.Conn) {
+// 	scanner := bufio.NewScanner(os.Stdin)
+// 	for scanner.Scan() {
+// 		t := scanner.Text()
+// 		ws.Write([]byte(t))
+// 		fmt.Printf(">> %s\n", t)
+// 	}
+// }
 
 // Read from websocket and print messages to STDOUT
 func read(ws *websocket.Conn) {
