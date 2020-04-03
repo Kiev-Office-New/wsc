@@ -118,7 +118,7 @@ func read(ws *websocket.Conn) {
 	}
 }
 
-func publish(projectID, topicID, msg string) error {
+func publish(projectID, topicID, msg []byte) error {
         // projectID := "my-project-id"
         // topicID := "my-topic"
         // msg := "Hello World"
@@ -130,7 +130,7 @@ func publish(projectID, topicID, msg string) error {
 
         t := client.Topic(topicID)
         result := t.Publish(ctx, &pubsub.Message{
-                Data: []byte(msg),
+                Data: msg,
         })
         // Block until the result is returned and a server-generated
         // ID is returned for the published message.
