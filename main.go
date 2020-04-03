@@ -113,10 +113,7 @@ func read(ws *websocket.Conn) {
 			log.Fatal(err)
 		}
 		fmt.Printf("<< %s\n", msg[:n])
-		err := publish("crawler-249816","bwin-events",msg[:n])
-		if err != nil {
-                	return fmt.Errorf("Error: %v", err)
-        	}
+		publish("crawler-249816","bwin-events",msg[:n])
 	}
 }
 
@@ -127,6 +124,7 @@ func publish(projectID string, topicID string, msg []byte) error {
         ctx := context.Background()
         client, err := pubsub.NewClient(ctx, projectID)
         if err != nil {
+		fmt.Printf("pubsub.NewClient: %v", err)
                 return fmt.Errorf("pubsub.NewClient: %v", err)
         }
 
@@ -138,6 +136,7 @@ func publish(projectID string, topicID string, msg []byte) error {
         // ID is returned for the published message.
         id, err := result.Get(ctx)
         if err != nil {
+		fmt.Printf("Get: %v", err)
                 return fmt.Errorf("Get: %v", err)
         }
 	fmt.Printf("^^ Published a message; msg ID: %v\n", id)
