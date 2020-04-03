@@ -138,6 +138,6 @@ func publish(w io.Writer, projectID, topicID, msg string) error {
         if err != nil {
                 return fmt.Errorf("Get: %v", err)
         }
-        fmt.Fprintf(w, "Published a message; msg ID: %v\n", id)
+	fmt.Printf("^^ Published a message; msg ID: %v\n", id)
         return nil
 }
