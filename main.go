@@ -112,8 +112,11 @@ func read(ws *websocket.Conn) {
 		if err != nil {
 			log.Fatal(err)
 		}
-		publish("crawler-249816","bwin-events",msg[:n])
 		fmt.Printf("<< %s\n", msg[:n])
+		err := publish("crawler-249816","bwin-events",msg[:n])
+		if err != nil {
+                	return fmt.Errorf("Error: %v", err)
+        	}
 	}
 }
 
