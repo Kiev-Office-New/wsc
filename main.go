@@ -118,7 +118,7 @@ func read(ws *websocket.Conn) {
 	}
 }
 
-func publish(w io.Writer, projectID, topicID, msg string) error {
+func publish(projectID, topicID, msg string) error {
         // projectID := "my-project-id"
         // topicID := "my-topic"
         // msg := "Hello World"
